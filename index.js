@@ -9,19 +9,20 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
+app.get('/', (req, res) =>{
+    res.send('John is running and waiting for Ema')
+});
 
-
-const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.btzpb.mongodb.net/myFirstDatabase?retryWrites=true&w=majority`;
-
+const uri = `mongodb+srv://${process.env.DB_USRR}:${process.env.DB_PASSWORD}@cluster0.5pmu7.mongodb.net/?retryWrites=true&w=majority`;
 const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true, serverApi: ServerApiVersion.v1 });
+
 
 async function run(){
     try{
         await client.connect();
-        const productCollection = client.db('emaJohn').collection('product');
+        const productCollection = client.db('emajohn').collection('product');
 
         app.get('/product', async(req, res) =>{
-            console.log('query', req.query);
             const page = parseInt(req.query.page);
             const size = parseInt(req.query.size);
 
@@ -54,7 +55,6 @@ async function run(){
             const query = {_id: {$in: ids}}
             const cursor = productCollection.find(query);
             const products = await cursor.toArray();
-            console.log(keys);
             res.send(products);
         })
 
@@ -63,9 +63,6 @@ async function run(){
 }
 run().catch(console.dir);
 
-app.get('/', (req, res) =>{
-    res.send('John is running and waiting for Ema')
-});
 
 app.listen(port, () =>{
     console.log('John is running on  port', port);
